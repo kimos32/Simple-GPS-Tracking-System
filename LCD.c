@@ -22,11 +22,11 @@ int main (void) {
         Delay();
         LCD_CMD(0X01);  //clear display
         Delay();
-        LCD_CMD(0X10);  //cursor display shift
+        LCD_CMD(0X0C);  //display is on 
         Delay();
-        LCD_CMD(0X0C);  //diplay is on
-        Delay();
-        LCD_WRITE('A'); //send character A on the LCD 
+        LCD_CMD(0x80);  // set cursor to beginning of first row
+        Delay(); 
+        LCD_WRITE("Distance:"); //send Distance on the LCD 
         Delay();
     }
 }
