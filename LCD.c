@@ -12,33 +12,17 @@ void LCD_WRITE (char data);
 void Delay(void);
 void LCD_CURSOR (void);
 
-/*this function must be writen as keil 
-allows running of a function before the main*/
 
-int main (void) {
-   
-    while(1) {
-        LCD_CMD(0X38);  //8-bit bus mode, 2 line display mode, 5x8 dots display mode
-        Delay();
-        LCD_CMD(0X01);  //clear display
-        Delay();
-        LCD_CMD(0X0C);  //display is on 
-        Delay();
-        LCD_CMD(0x80);  // set cursor to beginning of first row
-        Delay(); 
-        LCD_WRITE("Distance:"); //send Distance on the LCD 
-        Delay();
-    }
-}
+
 
 
 //this function passes the command to the LCD
 void LCD_CMD(unsigned long cmd) {
        
-    GPIO_PORTB_DATA_R |= (GPIO_PORTB_DATA_R & ~0x08) | ((cmd & 0x01 ) << 3 )  ; // pb3 == D0
-    GPIO_PORTC_DATA_R |= (GPIO_PORTC_DATA_R & ~0xF0) | ((cmd & 0x1E ) << 3 ); //pc 4,5,6,7 = D 1,2,3,4
-    GPIO_PORTD_DATA_R |= (GPIO_PORTD_DATA_R & ~0xC0) | ((cmd & 0x60 ) << 1 ); // PD 6,7 = D 5,6
-    GPIO_PORTF_DATA_R |= (GPIO_PORTF_DATA_R & ~0x10) | ((cmd & 0x80 ) << 3 ); //PF4 = D7
+    GPIO_PORTB_DATA_R = (GPIO_PORTB_DATA_R & ~0x08) | ((cmd & 0x01 ) << 3 ); //pb3 = D0
+    GPIO_PORTC_DATA_R = (GPIO_PORTC_DATA_R & ~0xF0) | ((cmd & 0x1E ) << 3 ); //pc 4,5,6,7 = D 1,2,3,4
+    GPIO_PORTD_DATA_R = (GPIO_PORTD_DATA_R & ~0xC0) | ((cmd & 0x60 ) << 1 ); //PD 6,7 = D 5,6
+    GPIO_PORTF_DATA_R = (GPIO_PORTF_DATA_R & ~0x10) | ((cmd & 0x80 ) >> 3 ); //PF4 = D7
     
     
     LCD_RS = 0x00;  //set PB7 register select pin to low
@@ -52,7 +36,7 @@ void LCD_WRITE (char data) {
     GPIO_PORTB_DATA_R |= (GPIO_PORTB_DATA_R & ~0x08) | ((data & 0x01 ) << 3 )  ; // pb3 == D0
     GPIO_PORTC_DATA_R |= (GPIO_PORTC_DATA_R & ~0xF0) | ((data & 0x1E ) << 3 ); //pc 4,5,6,7 = D 1,2,3,4
     GPIO_PORTD_DATA_R |= (GPIO_PORTD_DATA_R & ~0xC0) | ((data & 0x60 ) << 1 ); // PD 6,7 = D 5,6
-    GPIO_PORTF_DATA_R |= (GPIO_PORTF_DATA_R & ~0x10) | ((data & 0x80 ) << 3 ); //PF4 = D7
+    GPIO_PORTF_DATA_R |= (GPIO_PORTF_DATA_R & ~0x10) | ((data & 0x80 ) >> 3 ); //PF4 = D7
 
     LCD_RS = 0x80;  //set PB7 to high
     LCD_EN = 0x04;  //set the enable pin high
