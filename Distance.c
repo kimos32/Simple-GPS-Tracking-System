@@ -14,9 +14,11 @@ int main (void){
         else {
             LED &= ~0x08;
         }
-        LCD_CMD(0x0C);          // set cursor to beginning of second row 
-
-        LCD_WRITE(Distance);
+        LCD_CMD(0x0C);              // set cursor to beginning of second row 
+        for(int i=0 ; i< 12 ; i++ ){
+            LCD_CMD(0x14);          // Shift cursor position to right
+        }
+        LCD_WRITE(Distance);    // write vlaue of Distance on the LCD 
     }
 
 
