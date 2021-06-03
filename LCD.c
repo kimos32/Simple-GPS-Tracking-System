@@ -10,6 +10,7 @@
 void LCD_CMD(unsigned long cmd);
 void LCD_WRITE (char data);
 void Delay(void);
+void LCD_CURSOR (void);
 
 /*this function must be writen as keil 
 allows running of a function before the main*/
@@ -48,7 +49,11 @@ void LCD_CMD(unsigned long cmd) {
 
 //this function passes the data to the LCD
 void LCD_WRITE (char data) {
-    GPIO_PORTB_DATA_R = data;   //write the data to PB7-0
+    GPIO_PORTB_DATA_R |= (GPIO_PORTB_DATA_R & ~0x08) | ((data & 0x01 ) << 3 )  ; // pb3 == D0
+    GPIO_PORTC_DATA_R |= (GPIO_PORTC_DATA_R & ~0xF0) | ((data & 0x1E ) << 3 ); //pc 4,5,6,7 = D 1,2,3,4
+    GPIO_PORTD_DATA_R |= (GPIO_PORTD_DATA_R & ~0xC0) | ((data & 0x60 ) << 1 ); // PD 6,7 = D 5,6
+    GPIO_PORTF_DATA_R |= (GPIO_PORTF_DATA_R & ~0x10) | ((data & 0x80 ) << 3 ); //PF4 = D7
+
     LCD_RS = 0x80;  //set PB7 to high
     LCD_EN = 0x04;  //set the enable pin high
     Delay();        //short delay
@@ -62,4 +67,9 @@ void Delay(void) {
     while(time){
         time--;
     }
+}
+
+//LCD_cursor function to move the cursor to right
+void LCD_CURSOR (void){
+    LCD_CMD(0x06);
 }
