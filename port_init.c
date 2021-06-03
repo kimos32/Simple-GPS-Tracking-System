@@ -17,36 +17,60 @@ GPIO_PORTF_LOCK_R |= unlock;
 
 GPIO_PORTC_CR_R |= 0xF0; //required with previous group
 GPIO_PORTD_CR_R |= 0xC0;
-GPIO_PORTF_CR_R |= 0x18;
+GPIO_PORTF_CR_R |= 0x08;
 
-GPIO_PORTB_DIR_R |= 0x8E; //PB1,2,3,7 = ouput
+GPIO_PORTB_DIR_R |= 0xCE; //PB1,2,3,6,7 = ouput
 GPIO_PORTB_DIR_R &= ~0x01; //PB0 = input
 GPIO_PORTC_DIR_R |= 0xF0; //PC4,5,6,7 = output
 GPIO_PORTD_DIR_R |= 0xC0; //PD6,7 = output
-GPIO_PORTF_DIR_R |= 0x18; //PF3,4 = output
+GPIO_PORTF_DIR_R |= 0x08; //PF3,4 = output
 
-GPIO_PORTB_DEN_R |= 0x8F; //Enables digital signals
+GPIO_PORTB_DEN_R |= 0xCF; //Enables digital signals
 GPIO_PORTC_DEN_R |= 0xF0;
 GPIO_PORTD_DEN_R |= 0xC0;
-GPIO_PORTF_DEN_R |= 0x18;
+GPIO_PORTF_DEN_R |= 0x08;
 
-GPIO_PORTB_AMSEL_R &= ~0x8F; //disables analog signals
+GPIO_PORTB_AMSEL_R &= ~0xCF; //disables analog signals
 GPIO_PORTC_AMSEL_R &= ~0xF0;
 GPIO_PORTD_AMSEL_R &= ~0xC0;
-GPIO_PORTF_AMSEL_R &= ~0x18;
+GPIO_PORTF_AMSEL_R &= ~0x08;
 
 GPIO_PORTB_AFSEL_R |= 0x03; //enables PB0,1 alternate functions
-GPIO_PORTB_AFSEL_R &= ~0x8C; //disables alternate functions for the rest
+GPIO_PORTB_AFSEL_R &= ~0xCC; //disables alternate functions for the rest
 GPIO_PORTC_AFSEL_R &= ~0xF0;
 GPIO_PORTD_AFSEL_R &= ~0xC0;
-GPIO_PORTF_AFSEL_R &= ~0x18;
+GPIO_PORTF_AFSEL_R &= ~0x08;
 
 GPIO_PORTB_PCTL_R = (GPIO_PORTB_PCTL_R & ~0xFF) | (GPIO_PCTL_PB1_U1TX | GPIO_PCTL_PB0_U1RX);
 //specifies pin control functions for PB0,1
-GPIO_PORTB_PCTL_R &= ~0xF000FF00; //clears the bits of the other pins
+GPIO_PORTB_PCTL_R &= ~0xFF00FF00; //clears the bits of the other pins
 GPIO_PORTD_PCTL_R &= ~0xFF000000;
 GPIO_PORTC_PCTL_R &= ~0xFFFF0000;
-GPIO_PORTF_PCTL_R &= ~0x000FF000;
+GPIO_PORTF_PCTL_R &= ~0x0000F000;
 
 GPIO_PORTF_PUR_R|= 0x08; //Pull-up resistance for PF3 (LED)
 }
+
+
+
+/*
+LED:
+    PF3 -> Green LED
+
+GPS:
+    PB0 -> U1Rx
+    PB1 -> U1Tx
+
+LCD:
+    PB2 -> Enable (EN)
+    PB7 -> Register Select (RS)
+    PB3 -> D0
+    PC4 -> D1
+    PC5 -> D2
+    PC6 -> D3
+    PC7 -> D4
+    PD6 -> D5
+    PD7 -> D6
+    PB6 -> D7 
+    */
+		
