@@ -2,5 +2,5 @@
 
 # This is only a small project made by a group of students for university coursework.
 
-# USE AT YOUR OWN DISCRETION
-هو ده المشروع التمام
+# USE AT YOUR OWN DISCRETION  
+# هو ده المشروع التمام
