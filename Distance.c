@@ -18,7 +18,7 @@ int main (void){
         for(int i=0 ; i< 12 ; i++ ){
             LCD_CMD(0x14);          // Shift cursor position to right
         }
-        LCD_WRITE(Distance);    // write vlaue of Distance on the LCD 
+        LCD_WRITE(Distance);    // write vlaue of Distance on the "LCD" 
     }
 
 
