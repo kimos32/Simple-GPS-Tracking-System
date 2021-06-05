@@ -1,49 +1,26 @@
 #include "LCD.c"
-#define LED   GPIO_PORTF_DATA_R
+#define Green_LED GPIO_PORTF_DATA_R
 
 int main (void){
+  port_init();
 
-    int Distance;
-		int i = 0;
-     port_init();
-	
-	       /*this function must be written as Keil 
-         allows running of a function before the main*/
-	      while(1) {
-        LCD_CMD(0X38);  //8-bit bus mode, 2 line display mode, 5x8 dots display mode
-        Delay();
-        LCD_Cmd(0x06);
-        Delay();
-        LCD_Cmd(0X0F);
-        Delay();
-        LCD_CMD(0X01);  //clear display
-        Delay();
-        LCD_CMD(0x80);  // set cursor to beginning of first row
-        Delay(); 
-		LCD_WRITE('K'); //send Distance on the LCD 
-        Delay();
-         
-    
-				   for (Distance=0 ; Distance <= 0 ; Distance ++ ){
+  int Distance = 0;
+  int Desired_Distance = 100;
 
-        if (Distance >= 100){
+	LCD_CMD(0X38); //Setups 2 row mode
+  LCD_CMD(0x06); //shifts display 1 digit to the left
+  LCD_CMD(0X0C); //hides cursor
+  LCD_CMD(0X01); //clears the display
 
-             LED |= 0x08;
-        }
-        else {
-            LED &= ~0x08;
-        }
-        LCD_CMD(0x0C);              // set cursor to beginning of second row 
-				
-        while (i < 12){
-            LCD_CMD(0x14);          // Shift cursor position to right
-					i++;
-        }
-        LCD_WRITE(Distance);    // write value of Distance on the "LCD" 
+  for(Distance=0; Distance<=9999; Distance++){ //main counter loop
+  LCD_String ("Distance: ");
+  LCD_NUM(Distance);
+  delay(1000000);
+  LCD_CMD(0x01);
+  
+    if(Distance >= Desired_Distance){ //Turns green LED ON when the distance reaches the desired distance
+    Green_LED |= 0x08;
     }
 
-				
-				}
-	
- 
-	}
+  }
+}
