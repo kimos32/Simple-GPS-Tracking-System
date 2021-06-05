@@ -25,10 +25,10 @@ void LCD_CMD(unsigned long cmd) {
     GPIO_PORTB_DATA_R = (GPIO_PORTB_DATA_R & ~0x40) | ((cmd & 0x80 ) >> 1 ); //PB6 = D7
     
     
-    LCD_RS = 0x00;  //set PB7 register select pin to low
-    LCD_EN = 0x04;  //set enable pin to high
+    LCD_RS &= 0x7F;  //set PB7 register select pin to low
+    LCD_EN |= 0x04;  //set enable pin to high
     Delay();        //short delay 
-    LCD_EN = 0x00;  //set enable pin to low 
+    LCD_EN &= 0xFB;  //set enable pin to low 
 }
 
 //this function passes the data to the LCD
@@ -38,10 +38,10 @@ void LCD_WRITE (char data) {
     GPIO_PORTD_DATA_R = (GPIO_PORTD_DATA_R & ~0xC0) | ((data & 0x60 ) << 1 ); //PD6,7 = D5,6
     GPIO_PORTB_DATA_R = (GPIO_PORTB_DATA_R & ~0x40) | ((data & 0x80 ) >> 1 ); //PB6 = D7
 
-    LCD_RS = 0x80;  //set PB7 to high
-    LCD_EN = 0x04;  //set the enable pin high
+    LCD_RS |= 0x80;  //set PB7 to high
+    LCD_EN |= 0x04;  //set the enable pin high
     Delay();        //short delay
-    LCD_EN = 0x00;  //set the enable pin to low
+    LCD_EN &= 0xFB;  //set the enable pin to low
 }
 
 //short delay function
