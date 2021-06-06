@@ -1,9 +1,7 @@
 #include "port_init.c"
-
-#define LCD_RS  (GPIO_PORTB_DATA_R) //PB7 - Register Select 
-#define LCD_EN  (GPIO_PORTB_DATA_R) //PB3 - Enable
-#define LCD_RW  (GPIO_PORTD_DATA_R) //PD0 - Read/Write
  
+ #define LCD_RS GPIO_PORTB_DATA_R
+ #define LCD_EN GPIO_PORTB_DATA_R
 
 //function protoypes for initialization
 
@@ -17,33 +15,33 @@ void delay(unsigned long time);
 
 
 //this function passes the command to the LCD
-void LCD_CMD(unsigned long cmd) {
+void LCD_CMD(char cmd) {
        
+    LCD_RS &= 0x7F;  //set PB7 register select pin to low ~0x80
+    
     GPIO_PORTB_DATA_R = (GPIO_PORTB_DATA_R & ~0x08) | ((cmd & 0x01) << 3); //PB3 = D0
     GPIO_PORTC_DATA_R = (GPIO_PORTC_DATA_R & ~0xF0) | ((cmd & 0x1E) << 3); //PC4,5,6,7 = D1,2,3,4
     GPIO_PORTD_DATA_R = (GPIO_PORTD_DATA_R & ~0xC0) | ((cmd & 0x60) << 1); //PD6,7 = D5,6
     GPIO_PORTB_DATA_R = (GPIO_PORTB_DATA_R & ~0x40) | ((cmd & 0x80) >> 1); //PB6 = D7
     
-    
-    LCD_RS &= 0x7F;  //set PB7 register select pin to low
-    LCD_RW &= 0x00;  //clear PD0
     LCD_EN |= 0x04;  //set enable pin to high
-    delay(30000);         //short delay 
-    LCD_EN &= 0xFB;  //set enable pin to low 
+    delay(30000);
+	  LCD_EN &= 0xFB;  //set enable pin to low
+  
 }
 
 //this function passes the data to the LCD
 void LCD_DATA (char data) {
+    LCD_RS |= 0x80;  //set PB7 register select pin to high
+    
     GPIO_PORTB_DATA_R = (GPIO_PORTB_DATA_R & ~0x08) | ((data & 0x01) << 3); //PB3 = D0
     GPIO_PORTC_DATA_R = (GPIO_PORTC_DATA_R & ~0xF0) | ((data & 0x1E) << 3); //PC4,5,6,7 = D1,2,3,4
     GPIO_PORTD_DATA_R = (GPIO_PORTD_DATA_R & ~0xC0) | ((data & 0x60) << 1); //PD6,7 = D5,6
     GPIO_PORTB_DATA_R = (GPIO_PORTB_DATA_R & ~0x40) | ((data & 0x80) >> 1); //PB6 = D7
 
-    LCD_RS |= 0x80;  //set PB7 to high
-    LCD_RW &= 0x00;  //clear PD0
-    LCD_EN |= 0x04;  //set the enable pin high
-    delay(30000);        //short delay
-    LCD_EN &= 0xFB;  //set the enable pin to low
+    LCD_EN |= 0x04;  //set enable pin to high
+    delay(30000);
+    LCD_EN &= 0xFB;  //set enable pin to low
 }
 
 // Controls LCD delay
