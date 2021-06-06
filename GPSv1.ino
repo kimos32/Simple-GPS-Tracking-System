@@ -10,15 +10,19 @@
 void setup() {
   LED_init();
   LCD_init();
-  for(Distance=0; Distance<=9999; Distance++){ //main counter loop
+  
+for(Distance=0; Distance<=9999; Distance++){ //main counter loop
+  LCD_CMD(0x80);
   LCD_String ("Distance: ");
+  LCD_CMD(0xC0);
+  LCD_String("    ");
   LCD_NUM(Distance);
+  LCD_String(" meters");
   delay(1000);
   LCD_CMD(0x01);
-  
     if(Distance >= Desired_Distance){ //Turns green LED ON when the distance reaches the desired distance
     GreenLED |= 0x08;
-    }
+    } 
   }
 }
 
@@ -40,11 +44,11 @@ void LCD_init(void){
   GPIO_PORTB_DEN_R |= 0xCC; //Enables digital signals
   GPIO_PORTC_DEN_R |= 0xF0;
   GPIO_PORTD_DEN_R |= 0xC0;
-  
-  LCD_CMD(0X38);
+
+  LCD_CMD(0x38);
   LCD_CMD(0x06);
-  LCD_CMD(0X0C);
-  LCD_CMD(0X01);
+  LCD_CMD(0x0C);
+  LCD_CMD(0x01);
 
 }
 
@@ -82,6 +86,7 @@ void LCD_String (char *phrase)
   int v;
   for(v=0;phrase[v]!=0;v++)
   {
+    delay(1);
     LCD_DATA(phrase[v]);
   }
 }
