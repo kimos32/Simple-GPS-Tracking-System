@@ -1,10 +1,12 @@
 #include "LCD.c"
 #define GreenLED GPIO_PORTF_DATA_R
+#include "convert.c"
+#define Desired_Distance 100
 
 int main (void){
-  int Distance = 0;
-  int Desired_Distance = 100;
-	
+  int error = 0;
+	void gps();
+
   port_init();
 	
 	LCD_CMD(0X38); //Setups 2 row mode
@@ -12,20 +14,32 @@ int main (void){
   LCD_CMD(0X0C); //hides cursor
   LCD_CMD(0X01); //clears the display
 
-  for(Distance=0; Distance<=9999; Distance++){ //main counter loop
-  LCD_CMD(0x80);
-	LCD_String ("Distance: ");
-  LCD_CMD(0xC0);
-	LCD_String("    ");
-	LCD_NUM(Distance);
-	LCD_String(" meters");
-  delay(3000000);
-  LCD_CMD(0x01);
+  while(1){ //main counter loop
+  gps();
   
+    if (Distance> 100){               //Condition for +100 meter phase (w/ error)
+      LCD_CMD(0x80);
+      LCD_String ("Distance: ");LCD_NUM(Desired_Distance); LCD_DATA('m');
+      LCD_CMD(0xC0);
+        error = Distance - Desired_Distance;
+      LCD_String("Error: ");LCD_NUM(error); LCD_DATA('m');
+      delay(5000000);
+      LCD_CMD(0x01);
+    } 
+      else if(Distance<= Desired_Distance){                       //Condtion for -100 meter phase
+        LCD_CMD(0x80);
+      LCD_String ("Distance: ");LCD_NUM(Distance); LCD_DATA('m');
+      delay(5000000);
+      LCD_CMD(0x01);
+    }
+
     if(Distance >= Desired_Distance){ //Turns green LED ON when the distance reaches the desired distance
     GreenLED |= 0x08;
     }
+  
+  
 
   }
+	
 }
 
