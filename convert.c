@@ -43,8 +43,8 @@ if (quality == 'A'){                //checks if the data is valid; if it's not i
       lgDDF = ((lg2) - lgDDI*100)/60;     //takes the fractional part of the longitude (Decimal Minutes)
       lgDD = lgDDI + lgDDF;           //takes the fractional part of the longitude (Decimal Minutes)
 
-      latDD = latDD*100;
-      lgDD = lgDD*100;
+      latDD = latDD*10;
+      lgDD = lgDD*10;
 
       Distance_lat = latDD - old_lat;
       old_lat = latDD ;
@@ -54,12 +54,12 @@ if (quality == 'A'){                //checks if the data is valid; if it's not i
       old_lg = lgDD;
       //distlg = (int)((Distance_lg / 0.000001)*111.132)/1000;
   
-  a = pow(sin(Distance_lat/2),2) + cos(old_lat)*sin(latDD) * pow(sin(Distance_lg),2); //converts position from DD to meters
+  a = pow(sin(Distance_lat/2),2) + cos(old_lat)*cos(latDD) * pow(sin(Distance_lg/2),2); //converts position from DD to meters
   c = 2* asin(sqrt(a));
    travel = 6371 * c;
 
       //travel = sqrt((distlat)^2 + (distlg)^2);
-      if( travel > 3) {gps();}
+      if( travel > 40) {gps();}
       else{
 
       Distance = Distance + travel;             //main distance counter
